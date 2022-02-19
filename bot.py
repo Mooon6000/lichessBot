@@ -1,6 +1,6 @@
-# Imports
 from selenium import webdriver
 import json
+import re
 
 # Previous Fen
 prevFen = ""
@@ -10,7 +10,7 @@ chrm_caps = webdriver.DesiredCapabilities.CHROME.copy()
 chrm_caps['goog:loggingPrefs'] = { 'performance':'ALL' }
 
 # Initiate Driver
-driver = webdriver.Chrome(executable_path = '/Applications/chromedriver', desired_capabilities=chrm_caps)
+driver = webdriver.Chrome(desired_capabilities=chrm_caps)
 
 # Set URL
 driver.get("https://lichess.org")
@@ -27,6 +27,6 @@ def WebSocketLog():
 # Run fen every time move is played (and is in game)
 while True:
     # Loop over log backwards (start with most recent data)
-    for i in reversed(WebSocketLog):
-        # Check if a fen is found
-        if
+    for i in reversed(WebSocketLog()):
+        if i != [] and i != None:
+            print(str(re.findall(r'fen":"(.*?)"', i))[1:-1])
