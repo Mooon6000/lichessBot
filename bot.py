@@ -1,3 +1,4 @@
+from hashlib import new
 from selenium import webdriver
 import json
 import re
@@ -29,5 +30,8 @@ while True:
     # Loop over log backwards (start with most recent data)
     if '<button class="fbt resign" title="Resign"><span' in driver.page_source:
         for i in reversed(WebSocketLog()):
-            if i != [] and i != None:
-                print(str(re.findall(r'fen":"(.*?)"', i))[1:-1])
+            newFen = re.findall(r'fen":"(.*?)"', i)
+            if len(newFen) != 0 and prevFen != newFen:
+                prevFen = newFen
+                print(newFen)
+                break
