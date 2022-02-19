@@ -27,6 +27,7 @@ def WebSocketLog():
 # Run fen every time move is played (and is in game)
 while True:
     # Loop over log backwards (start with most recent data)
-    for i in reversed(WebSocketLog()):
-        if i != [] and i != None:
-            print(str(re.findall(r'fen":"(.*?)"', i))[1:-1])
+    if '<button class="fbt resign" title="Resign"><span' in driver.page_source:
+        for i in reversed(WebSocketLog()):
+            if i != [] and i != None:
+                print(str(re.findall(r'fen":"(.*?)"', i))[1:-1])
