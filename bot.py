@@ -1,22 +1,22 @@
+import re
+import json
 from hashlib import new
 from selenium import webdriver
-import json
-import re
+from stockfish import Stockfish
+from selenium.webdriver.common.action_chains import ActionChains
 
-# Previous Fen
+stockfish = Stockfish('/Users/morgan/Desktop/Stockfish/src/stockfish', parameters={"Threads": 8})
+stockfish.set_depth(10)
+
 prevFen = ""
 
-# Chrome Options
 chrm_caps = webdriver.DesiredCapabilities.CHROME.copy()
 chrm_caps['goog:loggingPrefs'] = { 'performance':'ALL' }
 
-# Initiate Driver
 driver = webdriver.Chrome(desired_capabilities=chrm_caps)
-
-# Set URL
+action = ActionChains(driver)
 driver.get("https://lichess.org")
 
-# Function to get all WebSocket Data
 def WebSocketLog():
     payloadCache = []
     for wsData in driver.get_log('performance'):
@@ -25,13 +25,19 @@ def WebSocketLog():
             payloadCache.append(wsJson["message"]["params"]["response"]["payloadData"])
     return payloadCache
 
-# Run fen every time move is played (and is in game)
 while True:
-    # Loop over log backwards (start with most recent data)
     if '<button class="fbt resign" title="Resign"><span' in driver.page_source:
         for i in reversed(WebSocketLog()):
             newFen = re.findall(r'fen":"(.*?)"', i)
-            if len(newFen) != 0 and prevFen != newFen:
-                prevFen = newFen
-                print(newFen)
-                break
+            if len(newFen) != 0 and prevFen != newFen[0]:
+                prevFen = newFen[0]
+                if 'Your turn - Play' in driver.page_source:
+                    if 'white manipulable' in driver.page_source:
+                        stockfish.set_fen_position(str(newFen)[1:-1]+' w')
+                        print(stockfish.get_top_moves())
+                        break
+                    elif 'black manipulable' in driver.page_source:
+                        stockfish.set_fen_position(str(newFen)[1:-1]+' b')
+                        print(stockfish.get_top_moves())
+                        break
+                    break
