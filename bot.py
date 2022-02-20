@@ -1,9 +1,10 @@
 from cgitb import enable
 import re
-import json
 import sys
-import random
+import json
+import time
 from hashlib import new
+from tracemalloc import start
 from selenium import webdriver
 from stockfish import Stockfish
 from selenium.webdriver.common.action_chains import ActionChains
@@ -38,19 +39,23 @@ while True:
                 prevFen = newFen[0]
                 if 'Your turn - Play' in driver.page_source:
                     if 'white manipulable' in driver.page_source:
+                        start_time = time.time()
                         stockfish.set_fen_position(str(newFen)[1:-1]+' w')
                         moves = stockfish.get_top_moves()
+                        end_time = time.time()
                         if enable_automation:
-                            driver.execute_script('lichess.socket.send("move",{"u":"' + moves[0]["Move"] + '","s":' + str(random.randint(3, 10)) + '})')
+                            driver.execute_script('lichess.socket.send("move",{"u":"' + moves[0]["Move"] + '","s":' + str(int(end_time-start_time)) + '})')
                             print("Bot played move: " + moves[0]["Move"])
                         else:
                             print("Top 5 moves: " + str(moves))
                         break
                     elif 'black manipulable' in driver.page_source:
+                        start_time = time.time()
                         stockfish.set_fen_position(str(newFen)[1:-1]+' b')
                         moves = stockfish.get_top_moves()
+                        end_time = time.time()
                         if enable_automation:
-                            driver.execute_script('lichess.socket.send("move",{"u":"' + moves[0]["Move"] + '","s": ' + str(random.randint(3, 10)) +'})')
+                            driver.execute_script('lichess.socket.send("move",{"u":"' + moves[0]["Move"] + '","s": ' + str(int(end_time-start_time)) +'})')
                             print("Bot played move: " + moves[0]["Move"])
                         else:
                             print("Top 5 moves: " + str(moves))
