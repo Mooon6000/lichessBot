@@ -39,16 +39,20 @@ while True:
                 if 'Your turn - Play' in driver.page_source:
                     if 'white manipulable' in driver.page_source:
                         stockfish.set_fen_position(str(newFen)[1:-1]+' w')
-                        move = stockfish.get_top_moves()[0]["Move"]
+                        moves = stockfish.get_top_moves()
                         if enable_automation:
-                            driver.execute_script('lichess.socket.send("move",{"u":"' + move + '","s":' + str(random.randint(3, 10)) + '})')
-                        print(move)
+                            driver.execute_script('lichess.socket.send("move",{"u":"' + moves[0]["Move"] + '","s":' + str(random.randint(3, 10)) + '})')
+                            print("Bot played move: " + moves[0]["Move"])
+                        else:
+                            print("Top 5 moves: " + str(moves))
                         break
                     elif 'black manipulable' in driver.page_source:
                         stockfish.set_fen_position(str(newFen)[1:-1]+' b')
-                        move = stockfish.get_top_moves()[0]["Move"]
+                        moves = stockfish.get_top_moves()
                         if enable_automation:
-                            driver.execute_script('lichess.socket.send("move",{"u":"' + move + '","s": ' + str(random.randint(3, 10)) +'})')
-                        print(move)
+                            driver.execute_script('lichess.socket.send("move",{"u":"' + moves[0]["Move"] + '","s": ' + str(random.randint(3, 10)) +'})')
+                            print("Bot played move: " + moves[0]["Move"])
+                        else:
+                            print("Top 5 moves: " + str(moves))
                         break
                     break
