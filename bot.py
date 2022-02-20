@@ -1,12 +1,17 @@
+from cgitb import enable
 import re
 import json
+import sys
+import random
 from hashlib import new
 from selenium import webdriver
 from stockfish import Stockfish
 from selenium.webdriver.common.action_chains import ActionChains
 
-stockfish = Stockfish('/Users/morgan/Desktop/Stockfish/src/stockfish', parameters={"Threads": 8})
-stockfish.set_depth(10)
+enable_automation = "-a" in sys.argv
+
+stockfish = Stockfish(parameters={"Threads": 8})
+stockfish.set_depth(16)
 
 prevFen = ""
 
@@ -34,10 +39,16 @@ while True:
                 if 'Your turn - Play' in driver.page_source:
                     if 'white manipulable' in driver.page_source:
                         stockfish.set_fen_position(str(newFen)[1:-1]+' w')
-                        print(stockfish.get_top_moves())
+                        move = stockfish.get_top_moves()[0]["Move"]
+                        if enable_automation:
+                            driver.execute_script('lichess.socket.send("move",{"u":"' + move + '","s":' + str(random.randint(3, 10)) + '})')
+                        print(move)
                         break
                     elif 'black manipulable' in driver.page_source:
                         stockfish.set_fen_position(str(newFen)[1:-1]+' b')
-                        print(stockfish.get_top_moves())
+                        move = stockfish.get_top_moves()[0]["Move"]
+                        if enable_automation:
+                            driver.execute_script('lichess.socket.send("move",{"u":"' + move + '","s": ' + str(random.randint(3, 10)) +'})')
+                        print(move)
                         break
                     break
