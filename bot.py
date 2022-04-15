@@ -11,7 +11,7 @@ from selenium.webdriver.common.keys import Keys
 from concurrent.futures import ThreadPoolExecutor
 from selenium.webdriver.common.action_chains import ActionChains
 
-depth = 6
+depth = 10
 stockfish = Stockfish('/Users/morgan/Desktop/Stockfish/src/stockfish', parameters={"Threads": 8})
 stockfish.set_depth(depth)
 stockfish.set_show_wdl_option(True)
@@ -47,7 +47,7 @@ def drawArrow(move, color = 'g'):
     if color == 'g' or color == 'green':
         arrow = '<line stroke="#15781B" stroke-width="0.15625" stroke-linecap="round" marker-end="url(#arrowhead-g)" opacity="1" cgHash="288,288,green"' + coords + '></line>'
     if color == 'y' or color == 'yellow':
-        arrow = '<line stroke="#15781B" stroke-width="0.15625" stroke-linecap="round" marker-end="url(#arrowhead-y)" opacity="1" cgHash="288,288,yellow"' + coords + '></line>'
+        arrow = '<line stroke="#e68f00" stroke-width="0.15625" stroke-linecap="round" marker-end="url(#arrowhead-y)" opacity="1" cgHash="288,288,yellow"' + coords + '></line>'
     if color == 'r' or color == 'red':
         arrow = '<line stroke="#882020" stroke-width="0.15625" stroke-linecap="round" marker-end="url(#arrowhead-r)" opacity="1" cgHash="288,288,red"' + coords + '></line>'
     if color == 'b' or color == 'blue':
@@ -80,7 +80,7 @@ while True:
                                 moves.append(move.get('Move'))
                                 arrowcolors.append('g') 
                                 continue
-                            if move.get('Mate') != None:
+                            if type(move.get('Mate')) == type(1):
                                 moves.append(move.get('Move'))
                                 arrowcolors.append('g') 
                                 continue
@@ -121,7 +121,7 @@ while True:
                                 moves.append(move.get('Move'))
                                 arrowcolors.append('g') 
                                 continue
-                            if move.get('Mate') != None:
+                            if type(move.get('Mate')) == type(1):
                                 moves.append(move.get('Move'))
                                 arrowcolors.append('g') 
                                 continue
