@@ -3,9 +3,9 @@ import sys
 import json
 import random
 import asyncio
-from matplotlib.pyplot import arrow
 from selenium import webdriver
 from stockfish import Stockfish
+from matplotlib.pyplot import arrow
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from concurrent.futures import ThreadPoolExecutor
