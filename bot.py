@@ -12,7 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 from selenium.webdriver.common.action_chains import ActionChains
 
 depth = 10
-stockfish = Stockfish('/Users/morgan/Desktop/Stockfish/src/stockfish', parameters={"Threads": 8})
+stockfish = Stockfish('./stockfish.exe', parameters={"Threads": 2})
 stockfish.set_depth(depth)
 stockfish.set_show_wdl_option(True)
 
